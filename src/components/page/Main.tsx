@@ -40,6 +40,15 @@ const Main = observer((props: Props) => {
           })}
         </Flex>
       </Flex>
+      <Flex flexDirection="column">
+        <div>url 추가</div>
+        <div>
+          <input type="" value={key} onChange={(e) => setKey(e.target.value)} />
+        </div>
+        <button className="add-var" onClick={() => combStore.addVariable(key, value)}>
+          url 추가
+        </button>
+      </Flex>
     </Wrapper>
   )
 })
