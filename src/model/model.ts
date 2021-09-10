@@ -1,8 +1,8 @@
 import { makeAutoObservable } from 'mobx'
 
 export class Variable {
-  key: string | null = null
-  value: string | null = null
+  key: string
+  value: string
 
   constructor({ key, value }: { key: string; value: string }) {
     makeAutoObservable(this)
