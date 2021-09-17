@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from '../../hooks/useStore'
 import { Flex } from '../common/Flex'
-import { IoMdCloseCircleOutline } from 'react-icons/io'
+import { IoMdCloseCircleOutline, IoMdClipboard, IoMdOpen } from 'react-icons/io'
 import Box from '../common/Box'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 interface Props {}
 
@@ -58,7 +59,7 @@ const Main = observer((props: Props) => {
         <Flex flexDirection="column">
           <div className="title">url 추가</div>
           <Box mb="12px">
-            <input type="" value={url} onChange={(e) => setUrl(e.target.value)} />
+            <input style={{ width: '300px' }} type="" value={url} onChange={(e) => setUrl(e.target.value)} />
           </Box>
           <button
             className="add-var"
@@ -70,10 +71,30 @@ const Main = observer((props: Props) => {
             url 추가
           </button>
         </Flex>
-        <Flex flexDirection="column" style={{ gap: '10px' }}>
-          {combStore.composedUrl.map((url, i) => (
-            <div key={i}>{url}</div>
+        <Flex mt="24px" flexDirection="column" style={{ gap: '10px' }}>
+          {combStore.composedUrl.map(({ url, index }) => (
+            <Flex width="100%" justifyContent="space-between" key={index}>
+              <div>{url}</div>
+              <Flex style={{ gap: '8px' }}>
+                <CopyToClipboard text={url}>
+                  <IoMdClipboard />
+                </CopyToClipboard>
+                <IoMdOpen onClick={() => window.open(url, '_blank')?.focus()} />
+                <IoMdCloseCircleOutline onClick={() => combStore.removeUrl(index)} />
+              </Flex>
+            </Flex>
           ))}
+        </Flex>
+        <Flex>
+          <button
+            onClick={() => {
+              combStore.composedUrl.forEach(({ url }, i) => {
+                window.open(url, `_blank_${i}`)
+              })
+            }}
+          >
+            전부 열기
+          </button>
         </Flex>
       </Wrapper>
     </Flex>
@@ -83,7 +104,7 @@ const Main = observer((props: Props) => {
 export default Main
 
 const Wrapper = styled.div`
-  width: 500px;
+  width: 700px;
   border-radius: 25px;
   border: solid gray 1px;
   padding: 25px 30px;
@@ -106,5 +127,8 @@ const Wrapper = styled.div`
 
   .varible-button + .varible-button {
     margin-left: 8px;
+  }
+
+  .url-box {
   }
 `

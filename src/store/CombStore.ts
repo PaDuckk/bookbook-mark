@@ -1,11 +1,11 @@
 import { makeAutoObservable } from 'mobx'
-import { Variable } from '../model/model'
+import { Url, Variable } from '../model/model'
 import { RootStore } from './rootStore'
 import Mustache from 'mustache'
 
 export class CombStore {
   variableList: Variable[] = []
-  urlList: string[] = []
+  urlList: Url[] = []
 
   constructor(public rootStore: RootStore) {
     makeAutoObservable(this)
@@ -16,7 +16,7 @@ export class CombStore {
   }
 
   addUrl = (url: string) => {
-    this.urlList.push(url)
+    this.urlList.push(new Url({ value: url }))
   }
 
   editVariable = (key: string, value: string) => {
@@ -34,8 +34,12 @@ export class CombStore {
     this.variableList.splice(index, 1)
   }
 
+  removeUrl = (index: number) => {
+    this.urlList.splice(index, 1)
+  }
+
   get linkList(): string[] {
-    return this.urlList.map((a) => a)
+    return this.urlList.map((url) => url.value)
   }
 
   get variables() {
@@ -45,7 +49,10 @@ export class CombStore {
     }, {})
   }
 
-  get composedUrl(): string[] {
-    return this.urlList.map((url) => Mustache.render(url, this.variables))
+  get composedUrl(): { url: string; index: number }[] {
+    return this.urlList.map((url, i) => ({
+      url: Mustache.render(url.value, this.variables),
+      index: i,
+    }))
   }
 }

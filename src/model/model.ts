@@ -11,3 +11,11 @@ export class Variable {
     this.value = value
   }
 }
+
+export class Url {
+  value: string
+
+  constructor({ value }: { value: string }) {
+    this.value = value
+  }
+}
