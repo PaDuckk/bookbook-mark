@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx'
 export class Variable {
   key: string
   value: string
+  mode: 'view' | 'edit' = 'view'
 
   constructor({ key, value }: { key: string; value: string }) {
     makeAutoObservable(this)

@@ -29,6 +29,23 @@ export class CombStore {
     variable.value = value
   }
 
+  setVarEditMode = (key: string) => {
+    const variable = this.variableList.find((v) => v.key === key)
+
+    if (variable) {
+      variable.mode = 'edit'
+    }
+  }
+
+  closeVarEditMode = (key: string, value: string) => {
+    const variable = this.variableList.find((v) => v.key === key)
+
+    if (variable) {
+      variable.value = value ?? variable.value
+      variable.mode = 'view'
+    }
+  }
+
   removeVariable = (key: string) => {
     const index = this.variableList.findIndex((v) => v.key === key)
     this.variableList.splice(index, 1)

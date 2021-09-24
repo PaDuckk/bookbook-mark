@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from '../../hooks/useStore'
 import { Flex } from '../common/Flex'
-import { IoMdCloseCircleOutline, IoMdClipboard, IoMdOpen } from 'react-icons/io'
+import { IoMdSave, IoMdCloseCircleOutline, IoMdClipboard, IoMdOpen, IoMdCreate } from 'react-icons/io'
 import Box from '../common/Box'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
@@ -13,6 +13,7 @@ const Main = observer((props: Props) => {
   const { combStore } = useStore()
   const [key, setKey] = useState('')
   const [value, setValue] = useState('')
+  const [editValue, setEditValue] = useState('')
   const [url, setUrl] = useState('')
 
   return (
@@ -44,13 +45,27 @@ const Main = observer((props: Props) => {
         <Flex flexDirection="column" mb="24px">
           <div className="title">변수</div>
           <Flex>
-            {combStore.variableList.map(({ key, value }) => {
+            {combStore.variableList.map(({ key, value, mode }) => {
+              const isViewMode = mode === 'view'
               return (
                 <Flex key={key} className="varible-button" alignItems="center">
                   <div>
-                    {key} : {value}
+                    {key} :{' '}
+                    {isViewMode ? value : <input value={editValue} onChange={(e) => setEditValue(e.target.value)} />}
                   </div>
-                  <IoMdCloseCircleOutline onClick={() => combStore.removeVariable(key)} />
+                  {isViewMode ? (
+                    <>
+                      <IoMdCreate
+                        onClick={() => {
+                          setEditValue(value)
+                          combStore.setVarEditMode(key)
+                        }}
+                      />
+                      <IoMdCloseCircleOutline onClick={() => combStore.removeVariable(key)} />
+                    </>
+                  ) : (
+                    <IoMdSave onClick={() => combStore.closeVarEditMode(key, editValue)} />
+                  )}
                 </Flex>
               )
             })}
@@ -86,7 +101,7 @@ const Main = observer((props: Props) => {
           ))}
         </Flex>
         <Flex>
-          <button
+          {/* <button
             onClick={() => {
               combStore.composedUrl.forEach(({ url }, i) => {
                 window.open(url, `_blank_${i}`)
@@ -94,7 +109,7 @@ const Main = observer((props: Props) => {
             }}
           >
             전부 열기
-          </button>
+          </button> */}
         </Flex>
       </Wrapper>
     </Flex>
